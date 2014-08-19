@@ -1,6 +1,0 @@
-Compile : Make
-Run ./main <pia file> <output ir file> <output bc file>
-there will be compiled TI assembly file generated with the same name
-
-e.g ./main test2.pia test2.ll test2.bc
-you will see a file named test2.asm in the current directory.
