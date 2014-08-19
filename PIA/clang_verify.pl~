@@ -1,0 +1,23 @@
+#!/usr/bin/perl -w
+
+use strict;
+use Getopt::Std;
+
+# declare the perl command line flags/options we want to allow
+my %options=();
+getopts("i:j:l:w:t:", \%options);
+
+# test for the existence of the options on the command line.
+# in a normal program you'd do more than just print these.
+print "-i $options{i}\n" if defined $options{i};
+
+my $input = $options{i};
+
+my $c_file = $input.".c";
+my $ll_file = $input.".ll";
+my $bc_file = $input.".bc";
+
+system("clang -cc1 -O3 -triple=spir -emit-llvm-bc $c_file");
+system("clang -cc1 -O3 -triple=spir -emit-llvm $c_file");
+system("ti_utils/cl6x -mv6600 --abi=eabi -O3 -s $bc_file");
+

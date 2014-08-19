@@ -1,0 +1,10 @@
+void func(float*restrict I0, float*restrict O0, float c0, float c1,
+          int size_x, int size_y) {
+  int i, j
+  for (i = 0; i < size_y; ++i) {
+    for (j = 0; j < size_x; ++j) {
+      O0[i * size_x + j] = I0[(i - 1) * size_x + j - 1] * c0 +
+                           I0[(i + 1) * size_x + j + 1] * c1;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+#include "semantic_tree.h"
+#include "vector"
+#include "string"
+#include "iostream"
+
+using namespace std;
+
+SemanticTreeNode* MakeSemanticTree(const string& dest_id, const string& op, vector<SemanticTreeNode*> children) {
+  SemanticTreeNode* cur_node = new SemanticTreeNode;
+  cur_node->dest_id = dest_id;
+  cur_node->op = op;
+  cur_node->children = children;
+
+  return cur_node;
+}
+
+SemanticTreeNode* MakeSemanticTree(const string& dest_id, const string& op) {
+  SemanticTreeNode* cur_node = new SemanticTreeNode;
+  cur_node->dest_id = dest_id;
+  cur_node->op = op;
+
+  return cur_node;
+}
+
+void PrintSemanticTree(SemanticTreeNode* semantic_tree, int depth) {
+  for (int i = 0; i < depth; ++i, cerr << "    ");
+  cerr << "dest : " << semantic_tree->dest_id << " op : " << semantic_tree->op << endl;
+  for (int i = 0; i < semantic_tree->children.size(); ++i ) {
+    PrintSemanticTree(semantic_tree->children[i], depth + 1);
+  }
+}
