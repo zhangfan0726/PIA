@@ -50,34 +50,6 @@ typedef struct {
 
 } FOR_LOOP_BB;
 
-/*
-BasicBlock* GenerateForLoopBB(Function* function, const vector<Value*>& starts, const vector<Value*>& ends,
-                              const vector<string>& loop_var_ids,
-                              int level, int max_level, vector<FOR_LOOP_BB>* for_loop_bbs) {
-  if (level >= max_level) {
-    return BasicBlock::Create(getGlobalContext(), "loop_body", function);
-  }
-  BasicBlock* loop_init = BasicBlock::Create(getGlobalContext(), "loop_init", function);  
-  BasicBlock* loop_cond = BasicBlock::Create(getGlobalContext(), "loop_cond", function);
-
-  BasicBlock* body = GenerateForLoopBB(function, starts, ends, loop_var_ids, level + 1, max_level, for_loop_bbs);
-
-  BasicBlock* loop_update = BasicBlock::Create(getGlobalContext(), "loop_update", function);
-  
-  FOR_LOOP_BB bb;
- // bb.init = loop_init;
- // bb.cond = loop_cond;
- // bb.update = loop_update;
-  
-  bb.start = starts[level];
-  bb.end = ends[level];
-  bb.loop_var_id = loop_var_ids[level];
-
-  for_loop_bbs->push_back(bb);
-
-  return body;
-}*/
-
 BasicBlock* GenerateForLoop(Function* function, 
                             const vector<Value*>& starts, 
                             const vector<Value*>& ends, 
@@ -154,44 +126,6 @@ BasicBlock* GenerateForLoop(Function* function,
     return AfterBB;
   }
 }
-
-/*
-void GenerateForLoop(Function* function, vector<FOR_LOOP_BB>& for_loop_bbs, BasicBlock* body, BasicBlock* after) {
-
-  FOR_LOOP_BB bb;
-  
-  for (int i = for_loop_bbs.size() - 1; i >= 0; --i) {
-    Value* start = for_loop_bbs[i].start;
-    Value* end = for_loop_bbs[i].end;
-    string loop_var_id = for_loop_bbs[i].loop_var_id;
-
-    ir_builder.SetInsertPoint(for_loop_bbs[i].init);
-    ir_builder.CreateStore(start, mutable_values[loop_var_id]);
-    ir_builder.CreateBr(for_loop_bbs[i].cond);
-    for_loop_bbs[i].init->dump();
-
-    ir_builder.SetInsertPoint(for_loop_bbs[i].cond);
-    Value* loop_cond_i = ir_builder.CreateLoad(mutable_values[loop_var_id]);
-    Value* loop_cond_cmp_i = ir_builder.CreateICmpULT(loop_cond_i, end);
-      
-    if (for_loop_bbs.size() == 1) {
-      ir_builder.CreateCondBr(loop_cond_cmp_i, body, after);
-    } else if (i == for_loop_bbs.size() - 1) {
-      ir_builder.CreateCondBr(loop_cond_cmp_i, for_loop_bbs[i - 1].init, after);
-    } else if (i == 0) {
-      ir_builder.CreateCondBr(loop_cond_cmp_i, body, for_loop_bbs[i + 1].update);
-    } else {
-      ir_builder.CreateCondBr(loop_cond_cmp_i, for_loop_bbs[i - 1].init, for_loop_bbs[i + 1].update);
-    }
-    for_loop_bbs[i].cond->dump();
-
-    ir_builder.SetInsertPoint(for_loop_bbs[i].update);
-    Value* loop_update_load_i = ir_builder.CreateLoad(mutable_values[loop_var_id]);
-    Value* loop_update_updated_i = ir_builder.CreateAdd(loop_update_load_i, ConstantInt::get(getGlobalContext(), APInt(32, 1)));
-    Value* loop_update_store_i = ir_builder.CreateStore(loop_update_updated_i, mutable_values[loop_var_id]);
-    ir_builder.CreateBr(for_loop_bbs[i].cond);
-  }
-}*/
 
 static AllocaInst* CreateEntryBlockAlloca(Function* function,
                                           const std::string &var_name) {
